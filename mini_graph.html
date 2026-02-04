@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 300px;
+                 background-color: #1E1E1E;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#EAC40A", "font": {"color": "white"}, "id": "ATEEZ", "label": "ATEEZ", "shape": "dot", "size": 40, "title": "ATEEZ - Main Artist"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "EDEN (\uc774\ub4e0) (KOR)", "label": "EDEN (\uc774\ub4e0) (KOR)", "shape": "dot", "size": 40, "title": "EDEN (\uc774\ub4e0) (KOR); 725 collaboration(s)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Ollounder", "label": "Ollounder", "shape": "dot", "size": 40, "title": "Ollounder; 496 collaboration(s)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "LEEZ", "label": "LEEZ", "shape": "dot", "size": 40, "title": "LEEZ; 430 collaboration(s)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Hongjoong (\ud64d\uc911)", "label": "Hongjoong (\ud64d\uc911)", "shape": "dot", "size": 40, "title": "Hongjoong (\ud64d\uc911); 408 collaboration(s)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Peperoni", "label": "Peperoni", "shape": "dot", "size": 40, "title": "Peperoni; 382 collaboration(s)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "OLIV", "label": "OLIV", "shape": "dot", "size": 40, "title": "OLIV; 381 collaboration(s)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "MINGI (\ubbfc\uae30)", "label": "MINGI (\ubbfc\uae30)", "shape": "dot", "size": 40, "title": "MINGI (\ubbfc\uae30); 372 collaboration(s)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "BUDDY (KOR)", "label": "BUDDY (KOR)", "shape": "dot", "size": 40, "title": "BUDDY (KOR); 336 collaboration(s)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "maddox", "label": "maddox", "shape": "dot", "size": 40, "title": "maddox; 329 collaboration(s)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "KQ Entertainment", "label": "KQ Entertainment", "shape": "dot", "size": 40, "title": "KQ Entertainment; 236 collaboration(s)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "\uc815\uc740\uacbd (Jung Eun Kyung)", "label": "\uc815\uc740\uacbd (Jung Eun Kyung)", "shape": "dot", "size": 40, "title": "\uc815\uc740\uacbd (Jung Eun Kyung); 119 collaboration(s)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Door (KOR)", "label": "Door (KOR)", "shape": "dot", "size": 40, "title": "Door (KOR); 112 collaboration(s)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "SEONGHWA (\uc131\ud654)", "label": "SEONGHWA (\uc131\ud654)", "shape": "dot", "size": 40, "title": "SEONGHWA (\uc131\ud654); 112 collaboration(s)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "YUNHO (\uc724\ud638)", "label": "YUNHO (\uc724\ud638)", "shape": "dot", "size": 40, "title": "YUNHO (\uc724\ud638); 112 collaboration(s)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "SAN (\uc0b0)", "label": "SAN (\uc0b0)", "shape": "dot", "size": 40, "title": "SAN (\uc0b0); 112 collaboration(s)"}]);
+                  edges = new vis.DataSet([{"from": "ATEEZ", "to": "EDEN (\uc774\ub4e0) (KOR)", "width": 10}, {"from": "ATEEZ", "to": "Ollounder", "width": 10}, {"from": "ATEEZ", "to": "LEEZ", "width": 10}, {"from": "ATEEZ", "to": "Hongjoong (\ud64d\uc911)", "width": 10}, {"from": "ATEEZ", "to": "Peperoni", "width": 10}, {"from": "ATEEZ", "to": "OLIV", "width": 10}, {"from": "ATEEZ", "to": "MINGI (\ubbfc\uae30)", "width": 10}, {"from": "ATEEZ", "to": "BUDDY (KOR)", "width": 10}, {"from": "ATEEZ", "to": "maddox", "width": 10}, {"from": "ATEEZ", "to": "KQ Entertainment", "width": 10}, {"from": "ATEEZ", "to": "\uc815\uc740\uacbd (Jung Eun Kyung)", "width": 10}, {"from": "ATEEZ", "to": "Door (KOR)", "width": 10}, {"from": "ATEEZ", "to": "SEONGHWA (\uc131\ud654)", "width": 10}, {"from": "ATEEZ", "to": "YUNHO (\uc724\ud638)", "width": 10}, {"from": "ATEEZ", "to": "SAN (\uc0b0)", "width": 10}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "barnesHut": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.3,
+            "damping": 0.09,
+            "gravitationalConstant": -8000,
+            "springConstant": 0.001,
+            "springLength": 100
+        },
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

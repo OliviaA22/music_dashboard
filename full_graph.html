@@ -1,0 +1,163 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #1E1E1E;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#EAC40A", "font": {"color": "white"}, "id": "ATEEZ", "label": "ATEEZ", "shape": "dot", "size": 40, "title": "ATEEZ - Main Artist"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "EDEN (\uc774\ub4e0) (KOR)", "label": "EDEN (\uc774\ub4e0) (KOR)", "shape": "dot", "size": 40, "title": "EDEN (\uc774\ub4e0) (KOR); 725 collaboration(s); Roles:Arranger, Background Vocals, Bass, Choir, Chorus Vocals, Composer, Drums, Lyricist, MIDI Programmer, Piano, Producer, Recording Engineer, Strings, Synthesizer, Vocals, Writer; Songs:\u2022 In Your Fantasy\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 Take Me Home (English Version)\u2022 WORK\u2022 Ice On My Teeth...and 163 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Ollounder", "label": "Ollounder", "shape": "dot", "size": 40, "title": "Ollounder; 496 collaboration(s); Roles:Arranger, Bass, Composer, Drums, Guitar, Lyricist, MIDI Programmer, Piano, Producer, Recording Engineer, Synthesizer, Writer; Songs:\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 Take Me Home (English Version)\u2022 WORK\u2022 Ice On My Teeth\u2022 \ubbf8\uce5c \ud3fc (Crazy Form)...and 118 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "LEEZ", "label": "LEEZ", "shape": "dot", "size": 40, "title": "LEEZ; 430 collaboration(s); Roles:Arranger, Bass, Choir, Chorus Vocals, Composer, Drums, Guitar, Lyricist, Narrator, Piano, Producer, Recording Engineer, Synthesizer, Writer; Songs:\u2022 Take Me Home (English Version)\u2022 One Day At A Time\u2022 Guerrilla\u2022 HALAZIA\u2022 Deja Vu...and 95 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Hongjoong (\ud64d\uc911)", "label": "Hongjoong (\ud64d\uc911)", "shape": "dot", "size": 40, "title": "Hongjoong (\ud64d\uc911); 408 collaboration(s); Roles:Additional Vocals, Arranger, Bass, Chorus Vocals, Composer, Drums, Lyricist, MIDI Programmer, Piano, Producer, Synthesizer, Vocals, Writer; Songs:\u2022 In Your Fantasy\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 Take Me Home (English Version)\u2022 WORK\u2022 Ice On My Teeth...and 152 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Peperoni", "label": "Peperoni", "shape": "dot", "size": 40, "title": "Peperoni; 382 collaboration(s); Roles:Arranger, Bass, Composer, Drums, Lyricist, MIDI Programmer, Piano, Producer, Recording Engineer, Remixer, Synthesizer, Writer; Songs:\u2022 In Your Fantasy\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 WORK\u2022 Ice On My Teeth\u2022 \ubbf8\uce5c \ud3fc (Crazy Form)...and 90 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "OLIV", "label": "OLIV", "shape": "dot", "size": 40, "title": "OLIV; 381 collaboration(s); Roles:Arranger, Bass, Composer, Drums, Lyricist, MIDI Programmer, Producer, Recording Engineer, Remixer, Synthesizer, Writer; Songs:\u2022 In Your Fantasy\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 WORK\u2022 Ice On My Teeth\u2022 \ubbf8\uce5c \ud3fc (Crazy Form)...and 90 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "MINGI (\ubbfc\uae30)", "label": "MINGI (\ubbfc\uae30)", "shape": "dot", "size": 40, "title": "MINGI (\ubbfc\uae30); 372 collaboration(s); Roles:Additional Vocals, Arranger, Chorus Vocals, Composer, Lyricist, Vocals, Writer; Songs:\u2022 In Your Fantasy\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 Take Me Home (English Version)\u2022 WORK\u2022 Ice On My Teeth...and 150 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "BUDDY (KOR)", "label": "BUDDY (KOR)", "shape": "dot", "size": 40, "title": "BUDDY (KOR); 336 collaboration(s); Roles:Arranger, Bass, Brass, Composer, Drums, Guitar, Lyricist, MIDI Programmer, Piano, Producer, Recording Engineer, Strings, Synthesizer, Writer; Songs:\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 One Day At A Time\u2022 Guerrilla\u2022 HALAZIA\u2022 Answer...and 75 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "maddox", "label": "maddox", "shape": "dot", "size": 40, "title": "maddox; 329 collaboration(s); Roles:Arranger, Background Vocals, Chorus Vocals, Composer, Lyricist, Narrator, Recording Engineer, Voice-Over, Writer; Songs:\u2022 In Your Fantasy\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 WORK\u2022 Ice On My Teeth\u2022 \ubbf8\uce5c \ud3fc (Crazy Form)...and 72 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "KQ Entertainment", "label": "KQ Entertainment", "shape": "dot", "size": 40, "title": "KQ Entertainment; 236 collaboration(s); Roles:Copyright \u00a9, Label, Phonographic Copyright \u2117; Songs:\u2022 In Your Fantasy\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 Take Me Home (English Version)\u2022 WORK\u2022 Ice On My Teeth...and 138 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "\uc815\uc740\uacbd (Jung Eun Kyung)", "label": "\uc815\uc740\uacbd (Jung Eun Kyung)", "shape": "dot", "size": 40, "title": "\uc815\uc740\uacbd (Jung Eun Kyung); 119 collaboration(s); Roles:Digital Audio Editor, Mixing Engineer, Recording Engineer; Songs:\u2022 Take Me Home (English Version)\u2022 One Day At A Time\u2022 Guerrilla\u2022 Answer\u2022 \ubd88\ub180\uc774\uc57c (Fireworks (I\u2019m The One))...and 64 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Door (KOR)", "label": "Door (KOR)", "shape": "dot", "size": 40, "title": "Door (KOR); 112 collaboration(s); Roles:Arranger, Chorus Vocals, Composer, Lyricist, Writer; Songs:\u2022 In Your Fantasy\u2022 Ice On My Teeth\u2022 \ubbf8\uce5c \ud3fc (Crazy Form)\u2022 IT\u2019s You\u2022 Blind...and 36 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "SEONGHWA (\uc131\ud654)", "label": "SEONGHWA (\uc131\ud654)", "shape": "dot", "size": 40, "title": "SEONGHWA (\uc131\ud654); 112 collaboration(s); Roles:Chorus Vocals, Lyricist, Vocals, Writer; Songs:\u2022 In Your Fantasy\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 Take Me Home (English Version)\u2022 WORK\u2022 Ice On My Teeth...and 103 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "YUNHO (\uc724\ud638)", "label": "YUNHO (\uc724\ud638)", "shape": "dot", "size": 40, "title": "YUNHO (\uc724\ud638); 112 collaboration(s); Roles:Chorus Vocals, Lyricist, Vocals, Writer; Songs:\u2022 In Your Fantasy\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 Take Me Home (English Version)\u2022 WORK\u2022 Ice On My Teeth...and 103 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "SAN (\uc0b0)", "label": "SAN (\uc0b0)", "shape": "dot", "size": 40, "title": "SAN (\uc0b0); 112 collaboration(s); Roles:Lyricist, Vocals, Writer; Songs:\u2022 In Your Fantasy\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 Take Me Home (English Version)\u2022 WORK\u2022 Ice On My Teeth...and 104 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Jong Ho (\uc885\ud638)", "label": "Jong Ho (\uc885\ud638)", "shape": "dot", "size": 40, "title": "Jong Ho (\uc885\ud638); 112 collaboration(s); Roles:Chorus Vocals, Lyricist, Vocals, Writer; Songs:\u2022 In Your Fantasy\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 Take Me Home (English Version)\u2022 WORK\u2022 Ice On My Teeth...and 103 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "YEOSANG (\uc5ec\uc0c1)", "label": "YEOSANG (\uc5ec\uc0c1)", "shape": "dot", "size": 40, "title": "YEOSANG (\uc5ec\uc0c1); 111 collaboration(s); Roles:Lyricist, Vocals, Writer; Songs:\u2022 In Your Fantasy\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 Take Me Home (English Version)\u2022 WORK\u2022 Ice On My Teeth...and 103 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "WOOYOUNG (\uc6b0\uc601)", "label": "WOOYOUNG (\uc6b0\uc601)", "shape": "dot", "size": 40, "title": "WOOYOUNG (\uc6b0\uc601); 111 collaboration(s); Roles:Lyricist, Vocals, Writer; Songs:\u2022 In Your Fantasy\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 Take Me Home (English Version)\u2022 WORK\u2022 Ice On My Teeth...and 103 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "BL$$D", "label": "BL$$D", "shape": "dot", "size": 40, "title": "BL$$D; 49 collaboration(s); Roles:Arranger, Composer, Lyricist, MIDI Programmer, Writer; Songs:\u2022 Ice On My Teeth\u2022 Ice On My Teeth (English Ver.)\u2022 Lemon Drop\u2022 Adrenaline\u2022 Ice On My Teeth (TELL ME BYE Version)...and 8 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "\ubc15\uc815\uc5b8 (Park Jung Un) (Honey Butter Studio)", "label": "\ubc15\uc815\uc5b8 (Park Jung Un) (Honey Butter Studio)", "shape": "dot", "size": 40, "title": "\ubc15\uc815\uc5b8 (Park Jung Un) (Honey Butter Studio); 46 collaboration(s); Roles:Mastering Engineer; Songs:\u2022 Take Me Home (English Version)\u2022 \ubd88\ub180\uc774\uc57c (Fireworks (I\u2019m The One))\u2022 IT\u2019s You\u2022 Lemon Drop\u2022 MATZ...and 41 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "\uad8c\ub0a8\uc6b0 (Kwon Nam Woo)", "label": "\uad8c\ub0a8\uc6b0 (Kwon Nam Woo)", "shape": "dot", "size": 40, "title": "\uad8c\ub0a8\uc6b0 (Kwon Nam Woo); 41 collaboration(s); Roles:Mastering Engineer; Songs:\u2022 One Day At A Time\u2022 Answer\u2022 WONDERLAND\u2022 INCEPTION\u2022 Wave...and 36 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "HLB", "label": "HLB", "shape": "dot", "size": 40, "title": "HLB; 40 collaboration(s); Roles:Arranger, Choir, Composer, Lyricist, Producer, Writer; Songs:\u2022 Say My Name\u2022 \ud574\uc801\uc655 (Pirate King)\u2022 HALA HALA (Hearts Awakened, Live Alive)\u2022 \uc120\ub3c4\ubd80 (The Leaders)\u2022 Treasure...and 14 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Alexander Karlsson", "label": "Alexander Karlsson", "shape": "dot", "size": 40, "title": "Alexander Karlsson; 38 collaboration(s); Roles:Arranger, Composer, Lyricist, Writer; Songs:\u2022 In Your Fantasy\u2022 BOUNCY (K-HOT CHILLI PEPPERS)\u2022 WORK\u2022 Blind\u2022 Now this house ain\u2019t a home...and 9 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "\uc591\uc601\uc740 (Yang Yung Eun)", "label": "\uc591\uc601\uc740 (Yang Yung Eun)", "shape": "dot", "size": 40, "title": "\uc591\uc601\uc740 (Yang Yung Eun); 38 collaboration(s); Roles:Digital Audio Editor, Recording Engineer; Songs:\u2022 Ice On My Teeth\u2022 \ubbf8\uce5c \ud3fc (Crazy Form)\u2022 IT\u2019s You\u2022 Lemon Drop\u2022 Enough...and 24 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "\uc5ec\ubbfc\uc218 (Yeo Min Soo)", "label": "\uc5ec\ubbfc\uc218 (Yeo Min Soo)", "shape": "dot", "size": 40, "title": "\uc5ec\ubbfc\uc218 (Yeo Min Soo); 35 collaboration(s); Roles:Digital Audio Editor, Recording Engineer; Songs:\u2022 In Your Fantasy\u2022 Ice On My Teeth\u2022 \ubbf8\uce5c \ud3fc (Crazy Form)\u2022 Lemon Drop\u2022 MATZ...and 17 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "DWAYNE (\ub4dc\uc6e8\uc778) (KOR)", "label": "DWAYNE (\ub4dc\uc6e8\uc778) (KOR)", "shape": "dot", "size": 40, "title": "DWAYNE (\ub4dc\uc6e8\uc778) (KOR); 33 collaboration(s); Roles:Arranger, Composer, Lyricist, MIDI Programmer, Writer; Songs:\u2022 Outlaw\u2022 New World\u2022 Paradigm\u2022 PROPAGANDA\u2022 NOT OKAY...and 4 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "\uad6c\uc885\ud544 (JongPil Gu)", "label": "\uad6c\uc885\ud544 (JongPil Gu)", "shape": "dot", "size": 40, "title": "\uad6c\uc885\ud544 (JongPil Gu); 31 collaboration(s); Roles:Mixing Engineer; Songs:\u2022 Take Me Home (English Version)\u2022 Ice On My Teeth\u2022 One Day At A Time\u2022 Answer\u2022 \ubd88\ub180\uc774\uc57c (Fireworks (I\u2019m The One))...and 26 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Neko (writer)", "label": "Neko (writer)", "shape": "dot", "size": 40, "title": "Neko (writer); 29 collaboration(s); Roles:Arranger, Composer, Lyricist, MIDI Programmer, Writer; Songs:\u2022 HALAZIA\u2022 New World\u2022 Paradigm\u2022 PROPAGANDA\u2022 NOT OKAY...and 3 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "FAST LANE", "label": "FAST LANE", "shape": "dot", "size": 40, "title": "FAST LANE; 23 collaboration(s); Roles:Arranger, Composer, Lyricist, Producer, Writer; Songs:\u2022 Forevermore\u2022 DIAMOND\u2022 Days\u2022 12 Midnight\u2022 Crescendo...and 1 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "BALM", "label": "BALM", "shape": "dot", "size": 40, "title": "BALM; 22 collaboration(s); Roles:Arranger, Chorus Vocals, Composer, Lyricist, Writer; Songs:\u2022 Blind\u2022 Shaboom\u2022 Empty Box\u2022 Castle\u2022 Choose...and 4 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Yo-Hei", "label": "Yo-Hei", "shape": "dot", "size": 40, "title": "Yo-Hei; 21 collaboration(s); Roles:Lyricist, Translator, Writer; Songs:\u2022 Still Here\u2022 INCEPTION (Japanese Ver.)\u2022 Say My Name (Japanese Ver.)\u2022 Pirate King (Japanese Ver.)\u2022 Fireworks (I\u2019m The One) (Japanese Ver.)...and 2 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Kikoi", "label": "Kikoi", "shape": "dot", "size": 40, "title": "Kikoi; 19 collaboration(s); Roles:Arranger, Composer, Lyricist, MIDI Programmer, Writer; Songs:\u2022 DEEP DIVE\u2022 Castle\u2022 FACE\u2022 Adrenaline\u2022 On The Road"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Stone Music Entertainment (\uc2a4\ud1a4 \ubba4\uc9c1 \uc5d4\ud130\ud14c\uc778\uba3c\ud2b8)", "label": "Stone Music Entertainment (\uc2a4\ud1a4 \ubba4\uc9c1 \uc5d4\ud130\ud14c\uc778\uba3c\ud2b8)", "shape": "dot", "size": 40, "title": "Stone Music Entertainment (\uc2a4\ud1a4 \ubba4\uc9c1 \uc5d4\ud130\ud14c\uc778\uba3c\ud2b8); 17 collaboration(s); Roles:Distributor, Label, Publisher; Songs:\u2022 One Day At A Time\u2022 INCEPTION\u2022 \ud574\uc801\uc655 (Pirate King)\u2022 Intro: Long Journey\u2022 THANXX...and 11 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Tankzzo", "label": "Tankzzo", "shape": "dot", "size": 40, "title": "Tankzzo; 17 collaboration(s); Roles:Arranger, Composer, Lyricist, MIDI Programmer, Writer; Songs:\u2022 Choose\u2022 Bridge : The Edge of Reality\u2022 FACE\u2022 Ice On My Teeth (TELL ME BYE Version)\u2022 NASA"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Sony Music Entertainment Korea", "label": "Sony Music Entertainment Korea", "shape": "dot", "size": 40, "title": "Sony Music Entertainment Korea; 16 collaboration(s); Roles:Distributor; Songs:\u2022 In Your Fantasy\u2022 Ice On My Teeth\u2022 Lemon Drop\u2022 Enough\u2022 Now this house ain\u2019t a home...and 11 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Ingrid Studio", "label": "Ingrid Studio", "shape": "dot", "size": 40, "title": "Ingrid Studio; 13 collaboration(s); Roles:Audio Edited At, Mixed At; Songs:\u2022 In Your Fantasy\u2022 Ice On My Teeth\u2022 Lemon Drop\u2022 \ud574\uc801\uc655 (Pirate King)\u2022 Intro: Long Journey...and 8 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Genie Music (\uc9c0\ub2c8\ubba4\uc9c1)", "label": "Genie Music (\uc9c0\ub2c8\ubba4\uc9c1)", "shape": "dot", "size": 40, "title": "Genie Music (\uc9c0\ub2c8\ubba4\uc9c1); 13 collaboration(s); Roles:Distributor, Publisher; Songs:\u2022 One Day At A Time\u2022 INCEPTION\u2022 \ud574\uc801\uc655 (Pirate King)\u2022 Intro: Long Journey\u2022 THANXX...and 8 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "\uac15\uc120\uc601 (Kang Sun Young)", "label": "\uac15\uc120\uc601 (Kang Sun Young)", "shape": "dot", "size": 40, "title": "\uac15\uc120\uc601 (Kang Sun Young); 11 collaboration(s); Roles:Assistant Mixing Engineer, Engineer; Songs:\u2022 One Day At A Time\u2022 MATZ\u2022 THANXX\u2022 ARRIBA\u2022 Youth...and 6 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "YUKI (MADKID)", "label": "YUKI (MADKID)", "shape": "dot", "size": 40, "title": "YUKI (MADKID); 11 collaboration(s); Roles:Lyricist, Translator, Writer; Songs:\u2022 ROCKY (Boxers Ver.)\u2022 \u591c\u9593\u98db\u884c (Turbulence) (Japanese Ver.)\u2022 Cyberpunk (Japanese Ver.)\u2022 Deja Vu (Japanese Ver.)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "\uc5c4\ud0dc\uc6d0 (Eom Tae-won)", "label": "\uc5c4\ud0dc\uc6d0 (Eom Tae-won)", "shape": "dot", "size": 40, "title": "\uc5c4\ud0dc\uc6d0 (Eom Tae-won); 10 collaboration(s); Roles:Arranger, Bass, Composer, Drums, Producer, Synthesizer, Writer; Songs:\u2022 Take Me Home (English Version)\u2022 Take Me Home"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Honey Butter Studio", "label": "Honey Butter Studio", "shape": "dot", "size": 40, "title": "Honey Butter Studio; 10 collaboration(s); Roles:Mastered At; Songs:\u2022 Lemon Drop\u2022 Enough\u2022 Now this house ain\u2019t a home\u2022 Man on Fire\u2022 Masterpiece...and 5 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Levi (KOR)", "label": "Levi (KOR)", "shape": "dot", "size": 40, "title": "Levi (KOR); 10 collaboration(s); Roles:Arranger, Chorus Vocals, Composer, Lyricist, Writer; Songs:\u2022 Masterpiece\u2022 Castle\u2022 NASA\u2022 On The Road"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Door (writer)", "label": "Door (writer)", "shape": "dot", "size": 40, "title": "Door (writer); 10 collaboration(s); Roles:Arranger, Chorus Vocals, Composer, Lyricist, Writer; Songs:\u2022 Paradigm\u2022 The King\u2022 Intro : Siren"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Samuel Kim", "label": "Samuel Kim", "shape": "dot", "size": 40, "title": "Samuel Kim; 10 collaboration(s); Roles:Lyricist, Writer; Songs:\u2022 Ash\u2022 Tippy Toes\u2022 12 Midnight\u2022 FACE\u2022 Crescendo"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "\uae40\uc131\ubbfc (Kim Sung Min)", "label": "\uae40\uc131\ubbfc (Kim Sung Min)", "shape": "dot", "size": 40, "title": "\uae40\uc131\ubbfc (Kim Sung Min); 10 collaboration(s); Roles:Arranger, Composer, Drums, Programmer, Writer; Songs:\u2022 Waiting for You\u2022 Waiting for You (Instrumental)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "\uae40\uc2dc\uc6d0 (Kim Si Won)", "label": "\uae40\uc2dc\uc6d0 (Kim Si Won)", "shape": "dot", "size": 40, "title": "\uae40\uc2dc\uc6d0 (Kim Si Won); 10 collaboration(s); Roles:Arranger, Composer, Keyboards, Piano, Writer; Songs:\u2022 Waiting for You\u2022 Waiting for You (Instrumental)"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "Nippon Columbia Co., Ltd.", "label": "Nippon Columbia Co., Ltd.", "shape": "dot", "size": 40, "title": "Nippon Columbia Co., Ltd.; 9 collaboration(s); Roles:Label; Songs:\u2022 ROCKY (Boxers Ver.)\u2022 The King\u2022 \u591c\u9593\u98db\u884c (Turbulence) (Japanese Ver.)\u2022 Say My Name (Japanese Ver.)\u2022 Pirate King (Japanese Ver.)...and 4 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "\uae40\uc218\uc815 (Kim Su Jeong)", "label": "\uae40\uc218\uc815 (Kim Su Jeong)", "shape": "dot", "size": 40, "title": "\uae40\uc218\uc815 (Kim Su Jeong); 7 collaboration(s); Roles:Recording Engineer; Songs:\u2022 Take Me Home (English Version)\u2022 \ubd88\ub180\uc774\uc57c (Fireworks (I\u2019m The One))\u2022 I\u2019m The One (HEAT-TOPPING Version)\u2022 \uc120\ub3c4\ubd80 (The Leaders)\u2022 Take Me Home...and 2 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "\ud64d\uc7a5\ubbf8 (Rose Hong)", "label": "\ud64d\uc7a5\ubbf8 (Rose Hong)", "shape": "dot", "size": 40, "title": "\ud64d\uc7a5\ubbf8 (Rose Hong); 7 collaboration(s); Roles:Assistant Mixing Engineer; Songs:\u2022 Ice On My Teeth\u2022 Lemon Drop\u2022 Enough\u2022 Now this house ain\u2019t a home\u2022 Masterpiece...and 2 more"}, {"color": "#FF4B4B", "font": {"color": "white"}, "id": "KLANG Studio", "label": "KLANG Studio", "shape": "dot", "size": 40, "title": "KLANG Studio; 7 collaboration(s); Roles:Mixed At; Songs:\u2022 Ice On My Teeth\u2022 Lemon Drop\u2022 Enough\u2022 Now this house ain\u2019t a home\u2022 Masterpiece...and 2 more"}]);
+                  edges = new vis.DataSet([{"from": "ATEEZ", "to": "EDEN (\uc774\ub4e0) (KOR)", "width": 10}, {"from": "ATEEZ", "to": "Ollounder", "width": 10}, {"from": "ATEEZ", "to": "LEEZ", "width": 10}, {"from": "ATEEZ", "to": "Hongjoong (\ud64d\uc911)", "width": 10}, {"from": "ATEEZ", "to": "Peperoni", "width": 10}, {"from": "ATEEZ", "to": "OLIV", "width": 10}, {"from": "ATEEZ", "to": "MINGI (\ubbfc\uae30)", "width": 10}, {"from": "ATEEZ", "to": "BUDDY (KOR)", "width": 10}, {"from": "ATEEZ", "to": "maddox", "width": 10}, {"from": "ATEEZ", "to": "KQ Entertainment", "width": 10}, {"from": "ATEEZ", "to": "\uc815\uc740\uacbd (Jung Eun Kyung)", "width": 10}, {"from": "ATEEZ", "to": "Door (KOR)", "width": 10}, {"from": "ATEEZ", "to": "SEONGHWA (\uc131\ud654)", "width": 10}, {"from": "ATEEZ", "to": "YUNHO (\uc724\ud638)", "width": 10}, {"from": "ATEEZ", "to": "SAN (\uc0b0)", "width": 10}, {"from": "ATEEZ", "to": "Jong Ho (\uc885\ud638)", "width": 10}, {"from": "ATEEZ", "to": "YEOSANG (\uc5ec\uc0c1)", "width": 10}, {"from": "ATEEZ", "to": "WOOYOUNG (\uc6b0\uc601)", "width": 10}, {"from": "ATEEZ", "to": "BL$$D", "width": 10}, {"from": "ATEEZ", "to": "\ubc15\uc815\uc5b8 (Park Jung Un) (Honey Butter Studio)", "width": 10}, {"from": "ATEEZ", "to": "\uad8c\ub0a8\uc6b0 (Kwon Nam Woo)", "width": 10}, {"from": "ATEEZ", "to": "HLB", "width": 10}, {"from": "ATEEZ", "to": "Alexander Karlsson", "width": 10}, {"from": "ATEEZ", "to": "\uc591\uc601\uc740 (Yang Yung Eun)", "width": 10}, {"from": "ATEEZ", "to": "\uc5ec\ubbfc\uc218 (Yeo Min Soo)", "width": 10}, {"from": "ATEEZ", "to": "DWAYNE (\ub4dc\uc6e8\uc778) (KOR)", "width": 10}, {"from": "ATEEZ", "to": "\uad6c\uc885\ud544 (JongPil Gu)", "width": 10}, {"from": "ATEEZ", "to": "Neko (writer)", "width": 10}, {"from": "ATEEZ", "to": "FAST LANE", "width": 10}, {"from": "ATEEZ", "to": "BALM", "width": 10}, {"from": "ATEEZ", "to": "Yo-Hei", "width": 10}, {"from": "ATEEZ", "to": "Kikoi", "width": 10}, {"from": "ATEEZ", "to": "Stone Music Entertainment (\uc2a4\ud1a4 \ubba4\uc9c1 \uc5d4\ud130\ud14c\uc778\uba3c\ud2b8)", "width": 10}, {"from": "ATEEZ", "to": "Tankzzo", "width": 10}, {"from": "ATEEZ", "to": "Sony Music Entertainment Korea", "width": 10}, {"from": "ATEEZ", "to": "Ingrid Studio", "width": 10}, {"from": "ATEEZ", "to": "Genie Music (\uc9c0\ub2c8\ubba4\uc9c1)", "width": 10}, {"from": "ATEEZ", "to": "\uac15\uc120\uc601 (Kang Sun Young)", "width": 10}, {"from": "ATEEZ", "to": "YUKI (MADKID)", "width": 10}, {"from": "ATEEZ", "to": "\uc5c4\ud0dc\uc6d0 (Eom Tae-won)", "width": 10}, {"from": "ATEEZ", "to": "Honey Butter Studio", "width": 10}, {"from": "ATEEZ", "to": "Levi (KOR)", "width": 10}, {"from": "ATEEZ", "to": "Door (writer)", "width": 10}, {"from": "ATEEZ", "to": "Samuel Kim", "width": 10}, {"from": "ATEEZ", "to": "\uae40\uc131\ubbfc (Kim Sung Min)", "width": 10}, {"from": "ATEEZ", "to": "\uae40\uc2dc\uc6d0 (Kim Si Won)", "width": 10}, {"from": "ATEEZ", "to": "Nippon Columbia Co., Ltd.", "width": 10}, {"from": "ATEEZ", "to": "\uae40\uc218\uc815 (Kim Su Jeong)", "width": 10}, {"from": "ATEEZ", "to": "\ud64d\uc7a5\ubbf8 (Rose Hong)", "width": 10}, {"from": "ATEEZ", "to": "KLANG Studio", "width": 10}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": false
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "barnesHut": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.3,
+            "damping": 0.09,
+            "gravitationalConstant": -8000,
+            "springConstant": 0.001,
+            "springLength": 100
+        },
+        "enabled": true,
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

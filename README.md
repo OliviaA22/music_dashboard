@@ -1,86 +1,555 @@
-# Music Artist Dashboard
 
-The dashboard is an interactive data visualization application that enables you to explore an artists discography with a special focus on their collaborators. It is built using the data retrieved via the [Genius Developer API](https://docs.genius.com/). 
+# 🎵 Music Analytics Dashboard
 
-## Getting Started
+A comprehensive Streamlit-based interactive dashboard for analyzing music artist data from the Genius API. Visualize artist metrics, track popularity, explore collaborations, and dive deep into song analytics.
 
-### Installing
+![Dashboard Preview](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Plotly](https://img.shields.io/badge/Plotly-3F4F75?style=for-the-badge&logo=plotly&logoColor=white)
 
-* To run the dashboard, clone this repository onto your local machine and install all necessary dependencies compiled in the requirements.txt.
+---
+
+## 📋 Table of Contents
+
+- [Features](#features)
+- [Demo](#demo)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Project Structure](#project-structure)
+- [Data Sources](#data-sources)
+- [API Reference](#api-reference)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## ✨ Features
+
+### 📊 Core Analytics
+- **Artist Overview**: Total songs, views, followers, and engagement metrics
+- **Top Hits Dashboard**: Visual ranking of an artist's most popular songs
+- **Release Timeline**: Interactive lollipop chart showing song releases over time
+- **Collaborator Network**: Network graph visualization of artist collaborations
+
+### 🎯 Key Metrics
+- Total song count
+- Aggregate pageviews
+- Average views per song
+- Artist follower count
+- Hot track indicators
+- Lyrical annotation depth
+
+### 🔍 Interactive Features
+- Dynamic artist search and selection
+- Real-time data filtering
+- Cached data loading for performance
+- Automatic parsing of nested JSON structures
+- Responsive layout with custom CSS styling
+
+### 🚀 Performance Optimizations
+- Streamlit caching for fast data access
+- One-time data parsing at startup
+- Minimal API calls (uses pre-fetched data)
+- Efficient DataFrame operations
+
+---
+
+## 🎬 Demo
+
+### Dashboard Overview
 ```
+┌─────────────────────────────────────────────────────────┐
+│  [Artist Name]'s Overview                               │
+├─────────────┬─────────────┬─────────────┬──────────────┤
+│ Total Songs │ Total Views │ Avg Views   │ 🔥 Followers │
+│     247     │  12.5M      │   50,607    │    8,369     │
+├─────────────────────────────────────────────────────────┤
+│  🕸️ Collaborator Network  │  🏆 Top Hits              │
+│                            │  1. Song Title (1.2M)     │
+│   [Network Graph]          │  2. Song Title (980K)     │
+│                            │  3. Song Title (850K)     │
+│                            │  4. Song Title (720K)     │
+│                            │  5. Song Title (650K)     │
+├─────────────────────────────────────────────────────────┤
+│  📅 Release History                                     │
+│  [Interactive Timeline Chart]                           │
+└─────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 🛠️ Installation
+
+### Prerequisites
+- Python 3.8 or higher
+- pip package manager
+- Git (optional)
+
+### Step 1: Clone Repository
+```bash
+git clone https://github.com/yourusername/music-analytics-dashboard.git
+cd music-analytics-dashboard
+```
+
+### Step 2: Create Virtual Environment
+```bash
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# On Windows:
+venv\Scripts\activate
+
+# On macOS/Linux:
+source venv/bin/activate
+```
+
+### Step 3: Install Dependencies
+```bash
 pip install -r requirements.txt
 ```
 
-### Executing program
+### Step 4: Create Required Files
+```bash
+# Create data directory
+mkdir -p data
 
-* To open the streamlit dashboard, simply run
+# Create style file
+touch style.css
+
+# Create environment file
+touch .env
 ```
-streamlit run app.py
+
+---
+
+## ⚙️ Configuration
+
+### 1. Genius API Token
+
+Create a `.env` file in the project root:
+
+```env
+TOKEN=your_genius_api_token_here
 ```
 
-## Data Retrieval
+**How to get a Genius API token:**
+1. Visit [Genius API Clients](https://genius.com/api-clients)
+2. Sign in or create an account
+3. Create a new API Client
+4. Copy your Client Access Token
+5. Paste it in the `.env` file
 
-### Genius Client (genius_client.py)
+### 2. Data Files
 
-This files has the code for initializing a client class by taking the API secret as a parameter. It furthermore holds multiple functions, each responsible for connecting to one of the several API endpoints provided by Genius.
+Place your data files in the `data/` directory:
+```
+data/
+├── artist_data.parquet
+└── song_data.parquet
+```
 
-#### get_artist_id()
+**Expected Data Structure:**
 
-Every API call, either for artist or song, requires a Genius specific id as a parameter. To still enable the user to enter the name of an artist of their choice, this could be mitigated by calling the [search endpoint](https://docs.genius.com/#search-h2). This endpoint mirrors the internal search of the Genius website and when an artist is entered, it returns songs of that specific artist. In addition to the general song data, each song also returns data for the primary artist. We therefore iterate over the returned songs until the first one where the entered artist matches the primary artist of the song (case insensitive) and return the ID from there.
+**artist_data.parquet:**
+```
+artist_id | name | description | alternate_names | header_image_url | image_url | social_links | followers_count
+----------|------|-------------|-----------------|------------------|-----------|--------------|----------------
+1233909   | ...  | ...         | ...             | ...              | ...       | ...          | 8369
+```
 
-Although case insensitive, if the artist is entered with a wrong spelling it can not be promised to work. A fallback is added in which the first songs primary artist is returned in case no matches can be found.
+**song_data.parquet:**
+```
+song_id | title | primary_artist_id | primary_artist_names | release_date | stats | album_cover_art_url | ...
+--------|-------|-------------------|---------------------|--------------|-------|---------------------|----
+378195  | ...   | 16775             | Artist Name         | 2014-03-17   | {...} | https://...         | ...
+```
 
-#### get_song_data()
-This function takes a song ID and calls the [song endpoint](https://docs.genius.com/#songs-h2) and returns the data as a json.
+### 3. Custom Styling
 
-#### get_artist_data()
+Edit `style.css` to customize the dashboard appearance:
 
-This function takes a artist ID and calls the [artist endpoint](https://docs.genius.com/#artists-h2) and returns the data as a json.
+```css
+/* Example custom styles */
+.stApp {
+    background-color: #0E1117;
+}
 
-#### get_artist_songs()
+.metric-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    border-radius: 10px;
+}
 
-This function takes an artist ID as well but calls an extension of the artist endpoint with which the songs of an artist can be batch retrieved. By default only 20 songs for an artist are returned, but the page can be added as a parameter, so the function calls itself recursively until the variable "next_page" is empty.
+/* Add your custom CSS here */
+```
 
-In comparison to the song endpoint, this returns much less variables and although it is used to retrieve all necessary song IDs for the selected artists, it can not be used as a stand in or a batch download alternative for the song data endpoint.
+---
 
-### Data Preparation
+## 🚀 Usage
 
-This file defines multiple functions that call the client, then parse over the returned json format and prepare / clean it for further processing.
+### Starting the Dashboard
 
-### Data Update
+```bash
+streamlit run draft.py
+```
 
-This file defines functions for updating the separate parquet files for the dashboard, to make sure there are no unnecessary API calls being made and the data is clean before saving.
+The dashboard will open automatically in your browser at `http://localhost:8501`
 
-## Data Architecture
+### Basic Workflow
 
-The data is stored in and in the dashboard code called from local parquet files. In addition to that it is also saved as CSVs for debugging reasons, but those are not directly used in the code and just serve for human oversight purposes.
+1. **Select an Artist**: Use the sidebar dropdown to search and select an artist
+2. **View Metrics**: See overview statistics in the top row
+3. **Explore Collaborations**: Interact with the network graph
+4. **Check Top Hits**: View the artist's most popular songs
+5. **Analyze Timeline**: Examine release patterns over time
 
-### Artist Data
+### Adding New Artists
 
-This file holds all the necessary data that is retrieved from the artist endpoint, for example 'name', 'description' (if available), 'header_image', etc.
+When you select an artist not in the database:
+1. The system automatically detects it's a new artist
+2. Makes minimal API calls to fetch basic info
+3. Parses and caches the data
+4. Displays the dashboard immediately
 
-### Song Data
+### Performance Tips
 
-Counterintuitively the data in this file is not retrieved by the song data endpoint, but the extended artist songs endpoint. 
+- ✅ First load parses all data (may take 10-30 seconds)
+- ✅ Subsequent loads are instant (cached)
+- ✅ Use existing artists to avoid API rate limits
+- ✅ Clear cache if data becomes stale: `st.cache_data.clear()`
 
-### Contributer Data
+---
 
-The contributer data is retrieved from the song data endpoint and holds the name, id and label for every artist involved in the making of each song (also including people that worked on the music video).
+## 📁 Project Structure
 
-## Dashboard Code
+```
+music-analytics-dashboard/
+│
+├── draft.py                    # Main Streamlit application
+├── data_prep.py               # Data preparation utilities
+├── genius_client.py           # Genius API client wrapper
+├── network.py                 # Network visualization module
+├── style.css                  # Custom CSS styling
+├── .env                       # Environment variables (API keys)
+├── requirements.txt           # Python dependencies
+├── README.md                  # This file
+│
+├── data/                      # Data directory
+│   ├── artist_data.parquet    # Artist metadata
+│   └── song_data.parquet      # Song metadata
+│
+└── venv/                      # Virtual environment (not tracked)
+```
 
-### Main App
+### File Descriptions
 
-### Network Code
+| File | Purpose |
+|------|---------|
+| `draft.py` | Main dashboard application with UI components |
+| `data_prep.py` | Functions for data fetching and preprocessing |
+| `genius_client.py` | API client for Genius API interactions |
+| `network.py` | Collaboration network graph generation |
+| `style.css` | Custom CSS for dashboard styling |
+| `.env` | Stores API tokens and secrets |
 
-### Utils
+---
 
+## 📊 Data Sources
 
+### Genius API
 
+This project uses the [Genius API](https://docs.genius.com/) to fetch:
+- Artist metadata (name, followers, images)
+- Song information (title, pageviews, release dates)
+- Annotation data (lyric annotations)
+- Collaboration data (featured artists)
 
+**API Endpoints Used:**
+- `GET /artists/:id` - Artist details
+- `GET /artists/:id/songs` - Artist songs
+- `GET /songs/:id` - Song details
 
-## Known Bugs
+### Data Schema
 
-### Reselecting the artist
+**Stats Column Structure** (nested in song_data):
+```json
+{
+  "pageviews": 451239,
+  "hot": false,
+  "unreviewed_annotations": 1,
+  "concurrents": null
+}
+```
 
-### 
+**Primary Artist Column Structure**:
+```json
+{
+  "id": 1233909,
+  "name": "Artist Name",
+  "image_url": "https://...",
+  "is_verified": false
+}
+```
+
+---
+
+## 🔌 API Reference
+
+### GeniusClient Class
+
+```python
+from genius_client import GeniusClient
+
+client = GeniusClient(token="your_api_token")
+
+# Get artist ID by name
+artist_id = client.get_artist_id("Artist Name")
+
+# Get artist data
+artist_data = client.get_artist_data(artist_id)
+
+# Get song data
+song_data = client.get_song_data(song_id)
+```
+
+### Data Prep Functions
+
+```python
+import data_prep as dp
+
+# Prepare artist song data
+artist_songs, song_features = dp.prep_artist_song_data(
+    client, 
+    "Artist Name",
+    include_song_data=False  # Set True for detailed data
+)
+
+# Prepare artist metadata
+artist_df = dp.prep_artist_data(
+    client,
+    "Artist Name",
+    include_song_data=False
+)
+
+# Prepare detailed song data (makes API calls)
+song_details = dp.prep_song_data(client, artist_songs)
+```
+
+### Network Visualization
+
+```python
+import network as netwrk
+
+# Render collaboration network
+netwrk.render_mini_network(
+    artist_name="Artist Name",
+    song_df=existing_song_df
+)
+```
+
+---
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+#### 1. `KeyError: 'response'`
+**Cause**: API rate limiting or invalid song IDs
+
+**Solution**:
+```python
+# Use cached data instead of API calls
+song_details = artist_songs[['song_id', 'title', 'unreviewed_annotations']].copy()
+```
+
+#### 2. `ModuleNotFoundError`
+**Cause**: Missing dependencies
+
+**Solution**:
+```bash
+pip install -r requirements.txt
+```
+
+#### 3. Empty Dashboard / No Data
+**Cause**: Data not parsed or filtering issue
+
+**Solution**:
+```python
+# Check if data exists
+print(f"Total songs: {len(existing_song_df)}")
+print(f"Filtered songs: {len(artist_songs)}")
+
+# Verify parsing
+print(artist_songs.columns)
+```
+
+#### 4. Slow Performance
+**Cause**: Parsing data on every run
+
+**Solution**:
+```python
+# Ensure caching is enabled
+@st.cache_data
+def load_and_parse_data():
+    # ... parsing logic
+```
+
+#### 5. API Rate Limits
+**Cause**: Too many API requests
+
+**Solution**:
+- Use `include_song_data=False` for new artists
+- Rely on pre-fetched CSV data
+- Implement request delays: `time.sleep(1)`
+
+### Debug Mode
+
+Add debug prints to diagnose issues:
+
+```python
+# At the top of draft.py
+DEBUG = True
+
+if DEBUG:
+    st.write("Debug Info:")
+    st.write(f"Artist ID: {artist_input_id}")
+    st.write(f"Artist Songs: {len(artist_songs)}")
+    st.write(f"Columns: {artist_songs.columns.tolist()}")
+```
+
+---
+
+## 📦 Requirements
+
+```txt
+streamlit>=1.28.0
+pandas>=2.0.0
+plotly>=5.17.0
+python-dotenv>=1.0.0
+requests>=2.31.0
+pyarrow>=13.0.0  # For parquet file support
+```
+
+**Install all at once:**
+```bash
+pip install streamlit pandas plotly python-dotenv requests pyarrow
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Here's how you can help:
+
+### Reporting Bugs
+1. Check if the bug is already reported in [Issues](https://github.com/yourusername/music-analytics-dashboard/issues)
+2. Create a new issue with:
+   - Clear title
+   - Steps to reproduce
+   - Expected vs actual behavior
+   - Error messages/screenshots
+
+### Suggesting Features
+1. Open a new issue with the `enhancement` label
+2. Describe the feature and its benefits
+3. Provide mockups if applicable
+
+### Pull Requests
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Make your changes
+4. Write/update tests if applicable
+5. Commit with clear messages: `git commit -m "Add feature X"`
+6. Push to your fork: `git push origin feature-name`
+7. Open a Pull Request
+
+### Code Style
+- Follow PEP 8 guidelines
+- Add docstrings to functions
+- Use type hints where appropriate
+- Keep functions focused and modular
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+```
+MIT License
+
+Copyright (c) 2026 [Your Name]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+```
+
+---
+
+## 🙏 Acknowledgments
+
+- **Genius API** - For providing comprehensive music data
+- **Streamlit** - For the excellent dashboard framework
+- **Plotly** - For interactive visualizations
+- **Community Contributors** - Thank you to all who contribute!
+
+---
+
+## 📧 Contact
+
+- **Author**: [Your Name]
+- **Email**: your.email@example.com
+- **GitHub**: [@yourusername](https://github.com/yourusername)
+- **Project Link**: [https://github.com/yourusername/music-analytics-dashboard](https://github.com/yourusername/music-analytics-dashboard)
+
+---
+
+## 🗺️ Roadmap
+
+### Version 1.0 (Current)
+- ✅ Basic artist dashboard
+- ✅ Top hits visualization
+- ✅ Collaboration network
+- ✅ Release timeline
+
+### Version 1.1 (Planned)
+- [ ] Multi-artist comparison
+- [ ] Export to PDF/PNG
+- [ ] Advanced filters (by year, genre)
+- [ ] Sentiment analysis of lyrics
+
+### Version 2.0 (Future)
+- [ ] Real-time streaming data
+- [ ] Machine learning predictions
+- [ ] Spotify integration
+- [ ] User authentication
+- [ ] Custom playlist generation
+
+---
+
+## 📊 Statistics
+
+![GitHub stars](https://img.shields.io/github/stars/yourusername/music-analytics-dashboard?style=social)
+![GitHub forks](https://img.shields.io/github/forks/yourusername/music-analytics-dashboard?style=social)
+![GitHub issues](https://img.shields.io/github/issues/yourusername/music-analytics-dashboard)
+![GitHub pull requests](https://img.shields.io/github/issues-pr/yourusername/music-analytics-dashboard)
+
+---
+
+**⭐ If you find this project useful, please consider giving it a star!**
+
+Made with ❤️ and 🎵

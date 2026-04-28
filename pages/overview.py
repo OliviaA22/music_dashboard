@@ -143,7 +143,7 @@ with st.container(border=True):
                     showscale=False
                 ),
                 text=timeline_df['title'],
-                hovertemplate="<b>%{text}</b><br>%{x|%b %Y}<br>Views: %{y:,}<extra></extra>",
+                hovertemplate="{text}{x|%b %Y} Views: %{y:,}",
                 showlegend=False
             ))
             

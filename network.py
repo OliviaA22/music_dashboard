@@ -65,22 +65,16 @@ def build_network_graph(main_artist, collaborators, limit=None, show_detailed_ho
     return G
 
 
-def render_network(G, height='600px', filename='graph'):
+def render_network(G, height='1090', filename='graph'):
     """Render NetworkX graph as interactive HTML using PyVis."""
     net = Network(height=height, bgcolor="#1E1E1E", font_color='white')
     net.from_nx(G)
     net.barnes_hut(gravity=-8000, central_gravity=0.3, spring_length=100, spring_strength=0.001)
     
-    try:
-        path = '/tmp'
-        net.save_graph(f'{path}/{filename}.html')
-        with open(f'{path}/{filename}.html', 'r', encoding='utf-8') as f:
-            html_content = f.read()
-    except:
-        net.save_graph(f'{filename}.html')
-        with open(f'{filename}.html', 'r', encoding='utf-8') as f:
-            html_content = f.read()
-    components.html(html_content, height=int(height.replace('px', '')) + 10)
+    net.save_graph(f'{filename}.html')
+    with open(f'{filename}.html', 'r', encoding='utf-8') as f:
+        html_content = f.read()
+    components.html(html_content, height=int(height) + 10)
 
 
 def render_mini_network(main_artist, df_songs, df_contributors=None):
@@ -91,7 +85,7 @@ def render_mini_network(main_artist, df_songs, df_contributors=None):
         st.info(f"No collaborators found for {main_artist}")
         return
     G = build_network_graph(main_artist, collaborators, limit=15, show_detailed_hover=False)
-    render_network(G, height='890px', filename='mini_graph')
+    render_network(G, height='1090', filename='mini_graph')
 
 
 def render_full_network(main_artist, df_songs, df_contributors=None, max_nodes=70):
@@ -107,7 +101,7 @@ def render_full_network(main_artist, df_songs, df_contributors=None, max_nodes=7
         return
     
     G = build_network_graph(main_artist, collaborators, limit=max_nodes, show_detailed_hover=True)
-    render_network(G, height='890px', filename='full_graph')
+    render_network(G, height='1090', filename='full_graph')
 
 
 def render_role_network(main_artist, df_songs, df_contributors, selected_role=None):
@@ -156,4 +150,4 @@ def render_role_network(main_artist, df_songs, df_contributors, selected_role=No
 
             G.add_edge(main_artist, contributor, weight=10)
     
-    render_network(G, height='890px', filename='role_graph')
+    render_network(G, height='1090', filename='role_graph')

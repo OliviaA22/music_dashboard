@@ -65,7 +65,7 @@ def build_network_graph(main_artist, collaborators, limit=None, show_detailed_ho
     return G
 
 
-def render_network(G, height='1090', filename='graph'):
+def render_network(G, height='900', filename='graph'):
     """Render NetworkX graph as interactive HTML using PyVis."""
     net = Network(height=height, bgcolor="#1E1E1E", font_color='white')
     net.from_nx(G)
@@ -74,6 +74,11 @@ def render_network(G, height='1090', filename='graph'):
     net.save_graph(f'{filename}.html')
     with open(f'{filename}.html', 'r', encoding='utf-8') as f:
         html_content = f.read()
+
+        html_content = html_content.replace(
+        '</head>',
+        f'<style>#mynetwork {{ height: {height}px !important; width: 100% !important; }}</style></head>'
+    )
     components.html(html_content, height=int(height) + 10)
 
 
@@ -85,7 +90,7 @@ def render_mini_network(main_artist, df_songs, df_contributors=None):
         st.info(f"No collaborators found for {main_artist}")
         return
     G = build_network_graph(main_artist, collaborators, limit=15, show_detailed_hover=False)
-    render_network(G, height='1090', filename='mini_graph')
+    render_network(G, height='600', filename='mini_graph')
 
 
 def render_full_network(main_artist, df_songs, df_contributors=None, max_nodes=70):
@@ -101,7 +106,7 @@ def render_full_network(main_artist, df_songs, df_contributors=None, max_nodes=7
         return
     
     G = build_network_graph(main_artist, collaborators, limit=max_nodes, show_detailed_hover=True)
-    render_network(G, height='1090', filename='full_graph')
+    render_network(G, height='900', filename='full_graph')
 
 
 def render_role_network(main_artist, df_songs, df_contributors, selected_role=None):
@@ -150,4 +155,4 @@ def render_role_network(main_artist, df_songs, df_contributors, selected_role=No
 
             G.add_edge(main_artist, contributor, weight=10)
     
-    render_network(G, height='1090', filename='role_graph')
+    render_network(G, height='900', filename='role_graph')

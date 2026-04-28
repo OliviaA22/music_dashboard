@@ -65,7 +65,7 @@ def build_network_graph(main_artist, collaborators, limit=None, show_detailed_ho
     return G
 
 
-def render_network(G, height='300px', filename='graph'):
+def render_network(G, height='600px', filename='graph'):
     """Render NetworkX graph as interactive HTML using PyVis."""
     net = Network(height=height, bgcolor="#1E1E1E", font_color='white')
     net.from_nx(G)
@@ -156,4 +156,4 @@ def render_role_network(main_artist, df_songs, df_contributors, selected_role=No
 
             G.add_edge(main_artist, contributor, weight=10)
     
-    render_network(G, height='500px', filename='role_graph')
+    render_network(G, height='600px', filename='role_graph')

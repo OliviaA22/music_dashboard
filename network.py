@@ -74,6 +74,11 @@ def render_network(G, height='1090', filename='graph'):
     net.save_graph(f'{filename}.html')
     with open(f'{filename}.html', 'r', encoding='utf-8') as f:
         html_content = f.read()
+        
+        html_content = html_content.replace(
+        '<style type="text/css">',
+        '<style type="text/css">\n#mynetwork { height: 1090px !important; }'
+    )
     components.html(html_content, height=int(height) + 10)
 
 

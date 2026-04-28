@@ -231,7 +231,7 @@ with tab4:
             artist_name, 
             artist_songs, 
             contributor_df,
-            max_nodes=50
+            max_nodes=70
         )
     else:
         available_roles = sorted(
